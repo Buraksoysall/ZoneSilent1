@@ -6,7 +6,10 @@ import android.content.pm.PackageManager
 import android.graphics.Color
 import android.media.AudioManager
 import android.os.Bundle
+import android.view.Gravity
 import android.view.inputmethod.EditorInfo
+import android.widget.Button
+import android.widget.FrameLayout
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -94,6 +97,8 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        addCrashTestButton()
         setupDatabase()
         geofenceManager = GeofenceManager(this)
 
@@ -116,6 +121,27 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
             ZoneMonitorService.start(this)
             ZoneMonitorService.refresh(this)
         }
+    }
+
+    private fun addCrashTestButton() {
+        val button = Button(this).apply {
+            text = "Test Crash"
+            setOnClickListener {
+                throw RuntimeException("Test Crash")
+            }
+        }
+
+        val params = FrameLayout.LayoutParams(
+            FrameLayout.LayoutParams.WRAP_CONTENT,
+            FrameLayout.LayoutParams.WRAP_CONTENT
+        ).apply {
+            gravity = Gravity.BOTTOM or Gravity.END
+            marginEnd = 32
+            bottomMargin = 32
+        }
+
+        (binding.root as? FrameLayout)?.addView(button, params)
+            ?: addContentView(button, params)
     }
 
     private fun setupUI() {

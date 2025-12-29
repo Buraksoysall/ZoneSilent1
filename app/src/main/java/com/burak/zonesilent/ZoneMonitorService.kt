@@ -224,9 +224,7 @@ class ZoneMonitorService : Service() {
         force: Boolean
     ) {
         val now = System.currentTimeMillis()
-        val shouldUpdate = force ||
-            (lastNotifyText != text) ||
-            (now - lastNotifyAtMs >= 60_000L)
+        val shouldUpdate = force || (lastNotifyText != text)
 
         if (!shouldUpdate) return
 
